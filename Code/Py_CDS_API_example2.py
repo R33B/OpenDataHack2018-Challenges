@@ -3,30 +3,29 @@
 # Multiple time example: https://software.ecmwf.int/wiki/display/COPSRV/CDS+web+API+%28cdsapi%29+training
 #
 import cdsapi
-from datetime import datetime, timedelta
- 
+import time_tools as tto
+
+########################################################################################################################
+# settings
+########################################################################################################################
+
 # p_levels = [str(z) for z in ([1] + list(range(50, 1050, 50)))]
 p_levels = [900]
-c = cdsapi.Client()
- 
- 
-def days_of_month(y, m):
-    d0 = datetime(y, m, 1)
-    d1 = datetime(y, m + 1, 1)
-    out = list()
-    while d0 < d1:
-        out.append(d0.strftime('%Y-%m-%d'))
-        d0 += timedelta(days=1)
-    return out
 
 min_year = 2016
 max_year = 2017
 min_month = 1
 max_month = 13
 
+########################################################################################################################
+# execution
+########################################################################################################################
+
+c = cdsapi.Client()
+ 
 for y in range(min_year, max_year):
     for m in range(min_month, max_month):
-        for d in days_of_month(y, m):
+        for d in tto.days_of_month(y, m):
             if False:
                 c.retrieve("reanalysis-era5-pressure-levels",
                            {

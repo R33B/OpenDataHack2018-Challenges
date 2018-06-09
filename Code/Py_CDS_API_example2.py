@@ -5,7 +5,8 @@
 import cdsapi
 from datetime import datetime, timedelta
  
-p_levels = [str(z)  for z in ([1] + list(range(50, 1050, 50)))]
+# p_levels = [str(z) for z in ([1] + list(range(50, 1050, 50)))]
+
 c = cdsapi.Client()
  
  
@@ -17,9 +18,13 @@ def days_of_month(y, m):
         out.append(d0.strftime('%Y-%m-%d'))
         d0 += timedelta(days=1)
     return out
- 
-for y in range(2008, 2018):
-    for m in range(1,13):
+
+
+max_year = 2009
+max_month = 2
+
+for y in range(2008, max_year):
+    for m in range(1, max_month):
         for d in days_of_month(y, m):
             c.retrieve("reanalysis-era5-pressure-levels",
                        {

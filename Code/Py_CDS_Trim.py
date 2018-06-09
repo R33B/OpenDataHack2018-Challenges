@@ -46,12 +46,36 @@ def netCDF_to_arrayTrim(nc, trim, strVar):
 	return arr
 
 ############################################################################
+def netCDF_to_JSON(nc, trim, strVar):
+
+	list_Files = glob.glob('./data/netCDF/ea_t_single_levels_*.nc')
+	list_Files.sort()
+
+	df = pd.DataFrame()
+	for strFile in list_Files:
+
+		# Load netCDF
+		nc = NetCDFFile(strFile)
+		u_100 = nc.variables['u_100'][:]
+		v_100 = nc.variables['v_100'][:]
+
+		# Datetime
+		dateRef = datetime.datetime.strptime(strFile.split('/')[-1], 'ea_t_single_levels_%Y-%m-%d.nc')
+
+		df = df.append({'datetime': dateRef, 'numRow': u_100.shape[0], 'numCol': u_100.shape[1], 'u_100': u_100.flatten(), 'v_100': v_100.flatten()})
+
+
+	# Save DataFrame as JSON
+	df.to_json('dataset.json')
+
+
+############################################################################
 if __name__ == "__main__":
 
-	iniLat = 43.0
-	finLat = 36.0
-	iniLon = -10.0
-	finLon = 5.0
+	iniLat = 48.0
+	finLat = 32.0
+	iniLon = -16.0
+	finLon = 8.0
 	trim = [iniLat, finLat, iniLon, finLon]
 
 	nc = NetCDFFile('download_24h.nc')
